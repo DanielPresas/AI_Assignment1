@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,6 +11,8 @@ public class UIManager : MonoBehaviour {
 
     public List<string> recentFiles = new List<string>();
 
+    public string customFilepath { get; set; }
+
     private void Start() {
         recentFiles.Insert(0, $"{Application.streamingAssetsPath}/probabilities.txt");
 
@@ -18,18 +21,27 @@ public class UIManager : MonoBehaviour {
             rfButton.transform.SetParent(recentFilePanel);
             rfButton.GetComponentInChildren<TextMeshProUGUI>().text = rf;
             rfButton.GetComponentInChildren<Button>().onClick.AddListener(() => {
-                StartWithRecentFile(rfButton.GetComponentInChildren<TextMeshProUGUI>().text);
+                StartWithFile(rfButton.GetComponentInChildren<TextMeshProUGUI>().text);
             });
         }
     }
 
-    public void StartWithRecentFile(string filepath) {
+    public void StartWithFile(string filepath) {
         if(string.IsNullOrEmpty(filepath)) {
-            Logger.Error("Not a valid filepath!");
+            Logger.Error("Failed to load probabilities because filepath is empty or null!");
+            return;
+        }
+
+        if(!File.Exists(filepath)) {
+            Logger.Error($"Failed to load probabilities because filepath doesn't exist!\nPath: {filepath}");
             return;
         }
 
         GameManager.probabilitiesFilepath = filepath;
         SceneManager.LoadScene(1);
+    }
+
+    public void StartWithCustomFilepath() {
+        StartWithFile(customFilepath);
     }
 }
