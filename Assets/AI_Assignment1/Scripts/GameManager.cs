@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     [SerializeField] private bool _randomizeDoors = false;
@@ -13,6 +14,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private List<Door> _doors = new List<Door>();
     [SerializeField] private GameObject _floor = null;
 
+    public static string probabilitiesFilepath = "";
     public static DoorProbabilities probabilities;
 
     public static GameObject player    => get._player;
@@ -32,10 +34,15 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Start() {
-        // @Todo: Find "probabilities.txt" in other places
-        var ret = FileManager.LoadFile(Application.streamingAssetsPath + "/probabilities.txt");
+        if(string.IsNullOrEmpty(probabilitiesFilepath)) {
+            SceneManager.LoadScene(0);
+            return;
+        }
+
+        var ret = FileManager.LoadFile(probabilitiesFilepath);
         if(!ret.success) {
-            Logger.Log($"Failed to load {Application.streamingAssetsPath + "/probabilities.txt"}");
+            Logger.Error($"Failed to load probability data from path: {probabilitiesFilepath}");
+            SceneManager.LoadScene(0);
             return;
         }
 
