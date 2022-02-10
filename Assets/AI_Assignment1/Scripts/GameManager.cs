@@ -5,17 +5,22 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
     [SerializeField] private bool _randomizeDoors = false;
 
-    [SerializeField] private GameObject _player = null;
-    [SerializeField] private Transform _spawnPoint;
+    [SerializeField] private GameObject _player    = null;
+    [SerializeField] private Transform _spawnPoint = null;
+    [SerializeField] private Transform _deathPoint = null;
 
     [Space]
     [SerializeField] private List<Door> _doors = new List<Door>();
+    [SerializeField] private GameObject _floor = null;
 
     public static DoorProbabilities probabilities;
 
     public static GameObject player    => get._player;
     public static Transform spawnPoint => get._spawnPoint;
-    public static List<Door> doors     => get._doors;
+    public static Transform deathPoint => get._deathPoint;
+
+    public static List<Door> doors => get._doors;
+    public static GameObject floor => get._floor;
 
     private static GameManager get;
 
@@ -35,9 +40,7 @@ public class GameManager : MonoBehaviour {
         }
 
         probabilities = ret.probabilities;
-        Random.InitState((int)System.DateTime.Now.ToFileTimeUtc());
-        ResetPlayer();
-        RandomizeDoors();
+        ResetGame();
     }
 
     private void Update() {
@@ -45,6 +48,14 @@ public class GameManager : MonoBehaviour {
             RandomizeDoors();
             _randomizeDoors = false;
         }
+    }
+
+    public void ResetGame() {
+        StopAllCoroutines();
+        Random.InitState((int)System.DateTime.Now.ToFileTimeUtc());
+        ResetPlayer();
+        RandomizeDoors();
+        floor.SetActive(true);
     }
 
     public static void ResetPlayer() {
@@ -55,6 +66,26 @@ public class GameManager : MonoBehaviour {
         player.transform.rotation = spawnPoint.rotation;
 
         cc.enabled = true;
+
+    }
+
+    public static void PlayerDeath() {
+        var cc = player.GetComponent<CharacterController>();
+        cc.enabled = false;
+
+        player.transform.position = deathPoint.position;
+        player.transform.rotation = deathPoint.rotation;
+
+        cc.enabled = true;
+    }
+
+    public static void GameOver() {
+        static IEnumerator DespawnFloor() {
+            yield return new WaitForSeconds(3.5f);
+            floor.SetActive(false);
+        }
+
+        get.StartCoroutine(DespawnFloor());
     }
 
     public static void RandomizeDoors() {

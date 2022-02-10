@@ -67,10 +67,14 @@ public class Door : MonoBehaviour {
     }
 
     public void RespawnTrigger(Collider other) {
-        GameManager.ResetPlayer();
-        GameManager.RandomizeDoors();
+        if(safe) {
+            GameManager.ResetPlayer();
+            GameManager.RandomizeDoors();
+        }
+        else {
+            GameManager.PlayerDeath();
+        }
     }
-
 
     public void ResetBasedOnFlags() {
         Logger.Log($"{gameObject.name} flags: {doorFlags:x} (hot = {hot}, noisy = {noisy}, safe = {safe})");
