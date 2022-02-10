@@ -4,7 +4,7 @@
 
 ### Daniel Presas - 100699431
 
-1. You are in an adventure type game going through a set of rooms where in the first room you need to choose doors to go through to reach a treasure. The only information you can determine about a door before you open it is if the door is hot to the touch and if there is noise coming from the other side of the door. Luckily you are also given the following table of previously collected information on doors that have been encountered by previous game players as they played the game describing how many doors they encountered with each of the "Hot" and "Noisy" properties and if the door turned out to be a "Safe Door" to go through. ("Y" indicates "yes" and "N" indicates "no"). So for instance, reading the first row of the table ten hot, noisy, safe doors were encountered by previous players.
+1. You are in an adventure type game going through a set of rooms where in the first room you need to choose doors to go through to reach a treasure. The only information you can determine about a door before you open it is if the door is hot to the touch and if there is noise coming from the other side of the door. Luckily you are also given the following table of previously collected information on doors that have been encountered by previous game players as they played the game describing how many doors they encountered with each of the "Hot" and "Noisy" properties and if the door turned out to be a "Safe door" to go through. ("Y" indicates "yes" and "N" indicates "no"). So for instance, reading the first row of the table, sixteen hot, noisy, safe doors were encountered by previous players.
 
     **Note: Round all answers to three significant digits.**
 
