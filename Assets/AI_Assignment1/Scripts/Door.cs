@@ -48,13 +48,13 @@ public class Door : MonoBehaviour {
         renderer.material = normalMaterial;
     }
 
-    private void OnTriggerEnter(Collider other) {
+    public void AudioTriggerEnter(Collider other) {
         if(!audioSource.enabled) return;
         _playSound = true;
         StartCoroutine(PlaySoundCoroutine());
     }
 
-    private void OnTriggerExit(Collider other) {
+    public void AudioTriggerExit(Collider other) {
         _playSound = false;
     }
 
@@ -65,6 +65,12 @@ public class Door : MonoBehaviour {
             yield return new WaitForSeconds(2.0f);
         }
     }
+
+    public void RespawnTrigger(Collider other) {
+        GameManager.ResetPlayer();
+        GameManager.RandomizeDoors();
+    }
+
 
     public void ResetBasedOnFlags() {
         Logger.Log($"{gameObject.name} flags: {doorFlags:x} (hot = {hot}, noisy = {noisy}, safe = {safe})");

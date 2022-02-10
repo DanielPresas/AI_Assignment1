@@ -3,14 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-    public bool debug = false;
+    [SerializeField] private bool _randomizeDoors = false;
 
-    public GameObject player = null;
+    [SerializeField] private GameObject _player = null;
+    [SerializeField] private Transform _spawnPoint;
 
-    public List<Door> doors = new List<Door>();
-    public Transform spawnPoint;
+    [Space]
+    [SerializeField] private List<Door> _doors = new List<Door>();
 
     public static DoorProbabilities probabilities;
+
+    public static GameObject player    => get._player;
+    public static Transform spawnPoint => get._spawnPoint;
+    public static List<Door> doors     => get._doors;
+
+    private static GameManager get;
+
+    private void Awake() {
+        if(get != null) {
+            gameObject.SetActive(false);
+        }
+        get = this;
+    }
 
     private void Start() {
         // @Todo: Find "probabilities.txt" in other places
@@ -22,18 +36,29 @@ public class GameManager : MonoBehaviour {
 
         probabilities = ret.probabilities;
         Random.InitState((int)System.DateTime.Now.ToFileTimeUtc());
-        player.transform.position = spawnPoint.position;
+        ResetPlayer();
+        RandomizeDoors();
     }
 
     private void Update() {
-        if(debug) {
+        if(_randomizeDoors) {
             RandomizeDoors();
-            debug = false;
+            _randomizeDoors = false;
         }
     }
 
-    public void RandomizeDoors() {
-        DoorProbabilities.Key GetRandomType() {
+    public static void ResetPlayer() {
+        var cc = player.GetComponent<CharacterController>();
+        cc.enabled = false;
+
+        player.transform.position = spawnPoint.position;
+        player.transform.rotation = spawnPoint.rotation;
+
+        cc.enabled = true;
+    }
+
+    public static void RandomizeDoors() {
+        static DoorProbabilities.Key GetRandomType() {
             var rand = Random.Range(0.0f, 1.0f);
 
             var chosenType = DoorProbabilities.Key.YYY;
