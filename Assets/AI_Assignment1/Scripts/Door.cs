@@ -49,7 +49,21 @@ public class Door : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        audioSource.PlayOneShot(noise);
+        if(!audioSource.enabled) return;
+        _playSound = true;
+        StartCoroutine(PlaySoundCoroutine());
+    }
+
+    private void OnTriggerExit(Collider other) {
+        _playSound = false;
+    }
+
+    bool _playSound = false;
+    IEnumerator PlaySoundCoroutine() {
+        while(_playSound) {
+            audioSource.PlayOneShot(noise);
+            yield return new WaitForSeconds(2.0f);
+        }
     }
 
     public void ResetBasedOnFlags() {

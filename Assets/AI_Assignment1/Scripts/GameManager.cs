@@ -22,11 +22,7 @@ public class GameManager : MonoBehaviour {
 
         probabilities = ret.probabilities;
         Random.InitState((int)System.DateTime.Now.ToFileTimeUtc());
-
-        // for(int i = 0; i < probabilities.dict.Length; i++) {
-        //     float p = probabilities.dict[i];
-        //     Logger.Log($"{(DoorProbabilities.Key)i}: {p}");
-        // }
+        player.transform.position = spawnPoint.position;
     }
 
     private void Update() {
@@ -39,7 +35,6 @@ public class GameManager : MonoBehaviour {
     public void RandomizeDoors() {
         DoorProbabilities.Key GetRandomType() {
             var rand = Random.Range(0.0f, 1.0f);
-            // Logger.Log($"rand: {rand}");
 
             var chosenType = DoorProbabilities.Key.YYY;
             for(int i = 0; i < probabilities.dict.Length; i++) {
@@ -51,7 +46,6 @@ public class GameManager : MonoBehaviour {
                 rand -= p;
             }
 
-            // Logger.Log($"chosenType: {chosenType}");
             return chosenType;
         }
 
